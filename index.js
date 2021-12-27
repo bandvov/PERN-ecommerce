@@ -4,13 +4,17 @@ const sequilize = require("./db.js");
 const models = require("./models/models");
 const app = express();
 const cors = require("cors");
+const routes = require("./routes");
+const errorHandler = require("./middleware/errorHandler");
+const fileupload = require("express-fileupload");
 
 const port = process.env.PORT || 5000;
 app.use(cors({ origin: "*" }));
 app.use(express.json());
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "started" });
-});
+app.use("/api", routes);
+app.use(fileupload({}));
+app.use(errorHandler);
+
 const start = async () => {
   try {
     await sequilize.authenticate();
