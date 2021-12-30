@@ -7,14 +7,18 @@ const cors = require("cors");
 const routes = require("./routes");
 const errorHandler = require("./middleware/errorHandler");
 const fileupload = require("express-fileupload");
+const path = require("path");
 
 const port = process.env.PORT || 5000;
 app.use(cors({ origin: "*" }));
 app.use(express.json());
-app.use("/api", routes);
 app.use(fileupload({}));
+app.use("/api", routes);
 app.use(errorHandler);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.resolve(__dirname, "static")));
+}
 const start = async () => {
   try {
     await sequilize.authenticate();
