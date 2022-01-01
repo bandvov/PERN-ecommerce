@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "startpm": "pm2 start index.js -i -1 --watch",
+    "stoppm": "pm2 stop index.js"
   },
   "repository": {
     "type": "git",

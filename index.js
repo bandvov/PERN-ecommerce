@@ -8,13 +8,23 @@ const routes = require("./routes");
 const errorHandler = require("./middleware/errorHandler");
 const fileupload = require("express-fileupload");
 const path = require("path");
+const compression = require("compression");
+const res = require("express/lib/response");
 
 const port = process.env.PORT || 5000;
+
 app.use(cors({ origin: "*" }));
+app.use(
+  compression({ level: 6, threshold: 100 * 1000, filter: shouldCompress })
+);
 app.use(express.json());
 app.use(fileupload({}));
 app.use("/api", routes);
 app.use(errorHandler);
+app.get("/", (req, res) => {
+  const payload = "some payload";
+  res.send(payload.repeat(100000));
+});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.resolve(__dirname, "static")));
@@ -31,3 +41,11 @@ const start = async () => {
   }
 };
 start();
+
+function shouldCompress(req, res) {
+  if (req.headers["x-no-compression"]) {
+    // don't compress responses with this request header
+    return false;
+  }
+  return compression.filter(req, res);
+}
