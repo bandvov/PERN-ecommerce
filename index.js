@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const sequilize = require("./db.js");
-const models = require("./models/models");
 const app = express();
 const cors = require("cors");
 const routes = require("./routes");
@@ -9,13 +8,12 @@ const errorHandler = require("./middleware/errorHandler");
 const fileupload = require("express-fileupload");
 const path = require("path");
 const compression = require("compression");
-const res = require("express/lib/response");
 
 const port = process.env.PORT || 5000;
 
 app.use(cors({ origin: "*" }));
 app.use(
-  compression({ level: 6, threshold: 100 * 1000, filter: shouldCompress })
+  compression({ level: 9, threshold: 100 * 1000, filter: shouldCompress })
 );
 app.use(express.json());
 app.use(fileupload({}));
